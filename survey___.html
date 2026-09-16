@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naqqoshlik katalogi — so'rovnoma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0f2b38;
+    --bg-deep-2:#0a1f29;
+    --surface:#f4ecd8;
+    --surface-2:#e9dfc2;
+    --turquoise:#1c7c8c;
+    --turquoise-dark:#125a66;
+    --gold:#c9973e;
+    --terracotta:#a6502e;
+    --ink:#241c14;
+    --ink-soft:#5a4f3e;
+    --ink-light:#f1ecdd;
+    --ink-light-soft:#bcd3d6;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg-deep);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2{ font-family:'Amiri',serif; margin:0; font-weight:700; }
+
+  .hero{
+    padding:52px 24px 40px;
+    text-align:center;
+    background:linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-deep-2) 100%);
+  }
+  .hero-eyebrow{ font-size:13px; color:var(--gold); margin-bottom:10px; }
+  .hero h1{ font-size:clamp(30px,6vw,44px); color:var(--ink-light); line-height:1.1; }
+  .hero p{ color:var(--ink-light-soft); font-size:15.5px; max-width:520px; margin:14px auto 0; line-height:1.6; }
+  .hero-band{ height:12px; background:repeating-linear-gradient(45deg, var(--gold) 0 10px, var(--terracotta) 10px 20px); opacity:0.85; }
+
+  .wrap{ max-width:640px; margin:-20px auto 60px; padding:0 20px; }
+  .panel{
+    background:var(--surface);
+    border-radius:14px;
+    padding:32px 28px 36px;
+    box-shadow:0 18px 40px -18px rgba(0,0,0,0.5);
+  }
+  .group{ margin-bottom:30px; }
+  .group:last-of-type{ margin-bottom:0; }
+  .group-label{
+    font-family:'Amiri',serif;
+    font-size:19px;
+    color:var(--turquoise-dark);
+    margin-bottom:16px;
+    padding-bottom:8px;
+    border-bottom:2px solid var(--surface-2);
+  }
+  .q{ margin-bottom:22px; }
+  .q:last-child{ margin-bottom:0; }
+  .q-text{ font-size:14.5px; color:var(--ink); margin-bottom:10px; line-height:1.5; font-weight:500; }
+  .options{ display:flex; flex-wrap:wrap; gap:8px; }
+  .opt{
+    position:relative;
+  }
+  .opt input{ position:absolute; opacity:0; width:100%; height:100%; cursor:pointer; margin:0; }
+  .opt span{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:8px;
+    border:1px solid rgba(36,28,20,0.2);
+    font-size:13.5px;
+    color:var(--ink-soft);
+    background:var(--surface-2);
+    transition:all 0.15s ease;
+  }
+  .opt input:checked + span{
+    background:var(--turquoise-dark);
+    border-color:var(--turquoise-dark);
+    color:var(--ink-light);
+  }
+  .scale{ display:flex; gap:6px; }
+  .scale .opt span{ padding:8px 0; width:42px; text-align:center; }
+  .scale-labels{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--ink-soft); margin-top:6px; }
+  textarea, input[type="text"]{
+    width:100%;
+    border:1px solid rgba(36,28,20,0.2);
+    background:var(--surface-2);
+    border-radius:8px;
+    padding:10px 12px;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    color:var(--ink);
+    resize:vertical;
+  }
+  textarea{ min-height:80px; }
+  .required{ color:var(--terracotta); }
+
+  .submit-btn{
+    width:100%;
+    margin-top:8px;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:var(--turquoise-dark);
+    color:var(--ink-light);
+    font-family:'Inter',sans-serif;
+    font-size:15.5px;
+    font-weight:600;
+    cursor:pointer;
+    transition:background 0.15s ease;
+  }
+  .submit-btn:hover{ background:#0d4a54; }
+
+  footer{
+    text-align:center;
+    color:var(--ink-light-soft);
+    font-size:12px;
+    padding:30px 24px 44px;
+    opacity:0.75;
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-eyebrow">Magistratura dissertatsiyasi — amaliy tajriba qismi</div>
+  <h1>Fikringiz muhim</h1>
+  <p>Avval <a href="https://atlinjk-alt.github.io/mahhura_new_katalog/" target="_blank" style="color:var(--gold);">"Naqqoshlik" interaktiv katalogini</a> ko'rib chiqing, so'ng quyidagi qisqa so'rovnomaga javob bering. Bir necha daqiqa vaqtingizni oladi.</p>
+  <p style="margin-top:14px;font-size:13.5px;color:var(--ink-light-soft);">Ismoilova Mashhura Nodirjon qizi &middot; Mavzu: "Naqqoshlik san'atida milliy naqshlarning raqamli arxivi va interaktiv katalogini yaratish"</p>
+</section>
+<div class="hero-band"></div>
+
+<div class="wrap">
+  <div class="panel">
+    <form action="https://formsubmit.co/atlin.jk@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Naqqoshlik katalogi — yangi so'rovnoma javobi">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://atlinjk-alt.github.io/mahhura_new_katalog/survey.html?rahmat=1">
+      <input type="text" name="_honey" style="display:none">
+
+      <div class="group">
+        <div class="group-label">A. Umumiy ma'lumot</div>
+
+        <div class="q">
+          <div class="q-text">1. Yoshingiz <span class="required">*</span></div>
+          <div class="options">
+            <label class="opt"><input type="radio" name="yosh" value="18 dan kichik" required><span>18 dan kichik</span></label>
+            <label class="opt"><input type="radio" name="yosh" value="18-25"><span>18–25</span></label>
+            <label class="opt"><input type="radio" name="yosh" value="26-40"><span>26–40</span></label>
+            <label class="opt"><input type="radio" name="yosh" value="40 dan katta"><span>40 dan katta</span></label>
+          </div>
+        </div>
+
+        <div class="q">
+          <div class="q-text">2. Naqqoshlik yoki milliy amaliy san'at bilan qanchalik tanishsiz? <span class="required">*</span></div>
+          <div class="options scale">
+            <label class="opt"><input type="radio" name="tanishlik" value="1" required><span>1</span></label>
+            <label class="opt"><input type="radio" name="tanishlik" value="2"><span>2</span></label>
+            <label class="opt"><input type="radio" name="tanishlik" value="3"><span>3</span></label>
+            <label class="opt"><input type="radio" name="tanishlik" value="4"><span>4</span></label>
+            <label class="opt"><input type="radio" name="tanishlik" value="5"><span>5</span></label>
+          </div>
+          <div class="scale-labels"><span>umuman bilmayman</span><span>mutaxassisman</span></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-label">B. Foydalanish qulayligi</div>
+
+        <div class="q">
+          <div class="q-text">3. Kerakli naqsh yoki bino namunasini topish oson bo'ldi. <span class="required">*</span></div>
+          <div class="options scale">
+            <label class="opt"><input type="radio" name="topish_oson" value="1" required><span>1</span></label>
+            <label class="opt"><input type="radio" name="topish_oson" value="2"><span>2</span></label>
+            <label class="opt"><input type="radio" name="topish_oson" value="3"><span>3</span></label>
+            <label class="opt"><input type="radio" name="topish_oson" value="4"><span>4</span></label>
+            <label class="opt"><input type="radio" name="topish_oson" value="5"><span>5</span></label>
+          </div>
+          <div class="scale-labels"><span>mutlaqo rozi emasman</span><span>to'liq roziman</span></div>
+        </div>
+
+        <div class="q">
+          <div class="q-text">4. Filtrlash va qidiruv funksiyasi qulay ishladi. <span class="required">*</span></div>
+          <div class="options scale">
+            <label class="opt"><input type="radio" name="filtr_qulay" value="1" required><span>1</span></label>
+            <label class="opt"><input type="radio" name="filtr_qulay" value="2"><span>2</span></label>
+            <label class="opt"><input type="radio" name="filtr_qulay" value="3"><span>3</span></label>
+            <label class="opt"><input type="radio" name="filtr_qulay" value="4"><span>4</span></label>
+            <label class="opt"><input type="radio" name="filtr_qulay" value="5"><span>5</span></label>
+          </div>
+          <div class="scale-labels"><span>mutlaqo rozi emasman</span><span>to'liq roziman</span></div>
+        </div>
+
+        <div class="q">
+          <div class="q-text">5. Sayt tuzilishi (avval naqsh turlari, keyin misol binolar) mantiqiy va tushunarli edi. <span class="required">*</span></div>
+          <div class="options scale">
+            <label class="opt"><input type="radio" name="tuzilma_mantiqiy" value="1" required><span>1</span></label>
+            <label class="opt"><input type="radio" name="tuzilma_mantiqiy" value="2"><span>2</span></label>
+            <label class="opt"><input type="radio" name="tuzilma_mantiqiy" value="3"><span>3</span></label>
+            <label class="opt"><input type="radio" name="tuzilma_mantiqiy" value="4"><span>4</span></label>
+            <label class="opt"><input type="radio" name="tuzilma_mantiqiy" value="5"><span>5</span></label>
+          </div>
+          <div class="scale-labels"><span>mutlaqo rozi emasman</span><span>to'liq roziman</span></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-label">C. Mazmun sifati</div>
+
+        <div class="q">
+          <div class="q-text">6. Har bir namuna haqidagi ma'lumot (tarix, texnika, joylashuv) yetarli darajada to'liq edi. <span class="required">*</span></div>
+          <div class="options scale">
+            <label class="opt"><input type="radio" name="malumot_toliq" value="1" required><span>1</span></label>
+            <label class="opt"><input type="radio" name="malumot_toliq" value="2"><span>2</span></label>
+            <label class="opt"><input type="radio" name="malumot_toliq" value="3"><span>3</span></label>
+            <label class="opt"><input type="radio" name="malumot_toliq" value="4"><span>4</span></label>
+            <label class="opt"><input type="radio" name="malumot_toliq" value="5"><span>5</span></label>
+          </div>
+          <div class="scale-labels"><span>mutlaqo rozi emasman</span><span>to'liq roziman</span></div>
+        </div>
+
+        <div class="q">
+          <div class="q-text">7. Matnlar tushunarli va ravon yozilgan edi. <span class="required">*</span></div>
+          <div class="options scale">
+            <label class="opt"><input type="radio" name="matn_ravon" value="1" required><span>1</span></label>
+            <label class="opt"><input type="radio" name="matn_ravon" value="2"><span>2</span></label>
+            <label class="opt"><input type="radio" name="matn_ravon" value="3"><span>3</span></label>
+            <label class="opt"><input type="radio" name="matn_ravon" value="4"><span>4</span></label>
+            <label class="opt"><input type="radio" name="matn_ravon" value="5"><span>5</span></label>
+          </div>
+          <div class="scale-labels"><span>mutlaqo rozi emasman</span><span>to'liq roziman</span></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-label">D. Dizayn va vizual taassurot</div>
+
+        <div class="q">
+          <div class="q-text">8. Katalogning umumiy dizayni (ranglar, shriftlar) o'zbek milliy naqqoshligi ruhiga mos keldi. <span class="required">*</span></div>
+          <div class="options scale">
+            <label class="opt"><input type="radio" name="dizayn_mos" value="1" required><span>1</span></label>
+            <label class="opt"><input type="radio" name="dizayn_mos" value="2"><span>2</span></label>
+            <label class="opt"><input type="radio" name="dizayn_mos" value="3"><span>3</span></label>
+            <label class="opt"><input type="radio" name="dizayn_mos" value="4"><span>4</span></label>
+            <label class="opt"><input type="radio" name="dizayn_mos" value="5"><span>5</span></label>
+          </div>
+          <div class="scale-labels"><span>mutlaqo rozi emasman</span><span>to'liq roziman</span></div>
+        </div>
+
+        <div class="q">
+          <div class="q-text">9. Suratlar sifati va mosligi qoniqarli edi. <span class="required">*</span></div>
+          <div class="options scale">
+            <label class="opt"><input type="radio" name="suratlar_qoniqarli" value="1" required><span>1</span></label>
+            <label class="opt"><input type="radio" name="suratlar_qoniqarli" value="2"><span>2</span></label>
+            <label class="opt"><input type="radio" name="suratlar_qoniqarli" value="3"><span>3</span></label>
+            <label class="opt"><input type="radio" name="suratlar_qoniqarli" value="4"><span>4</span></label>
+            <label class="opt"><input type="radio" name="suratlar_qoniqarli" value="5"><span>5</span></label>
+          </div>
+          <div class="scale-labels"><span>mutlaqo rozi emasman</span><span>to'liq roziman</span></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-label">E. Umumiy baho va ochiq fikrlar</div>
+
+        <div class="q">
+          <div class="q-text">10. Katalogni 10 balllik tizimda qanday baholaysiz? <span class="required">*</span></div>
+          <div class="options">
+            <label class="opt"><input type="radio" name="umumiy_baho" value="1" required><span>1</span></label>
+            <label class="opt"><input type="radio" name="umumiy_baho" value="2"><span>2</span></label>
+            <label class="opt"><input type="radio" name="umumiy_baho" value="3"><span>3</span></label>
+            <label class="opt"><input type="radio" name="umumiy_baho" value="4"><span>4</span></label>
+            <label class="opt"><input type="radio" name="umumiy_baho" value="5"><span>5</span></label>
+            <label class="opt"><input type="radio" name="umumiy_baho" value="6"><span>6</span></label>
+            <label class="opt"><input type="radio" name="umumiy_baho" value="7"><span>7</span></label>
+            <label class="opt"><input type="radio" name="umumiy_baho" value="8"><span>8</span></label>
+            <label class="opt"><input type="radio" name="umumiy_baho" value="9"><span>9</span></label>
+            <label class="opt"><input type="radio" name="umumiy_baho" value="10"><span>10</span></label>
+          </div>
+        </div>
+
+        <div class="q">
+          <div class="q-text">11. Sizningcha, bu kabi raqamli katalog an'anaviy usulga (kitob, muzey ekspozitsiyasi) nisbatan qanday afzalliklarga ega?</div>
+          <textarea name="afzalliklari"></textarea>
+        </div>
+
+        <div class="q">
+          <div class="q-text">12. Katalogda nima yetishmayapti yoki qanday yaxshilash mumkin?</div>
+          <textarea name="yaxshilash"></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">Yuborish</button>
+    </form>
+  </div>
+</div>
+
+<footer>Magistratura dissertatsiyasi doirasidagi amaliy tajriba &middot; javoblar to'g'ridan-to'g'ri emailga yuboriladi.</footer>
+
+</body>
+</html>
