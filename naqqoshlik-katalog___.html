@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naqqoshlik — interaktiv raqamli katalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0f2b38;
+    --bg-deep-2:#0a1f29;
+    --surface:#f4ecd8;
+    --surface-2:#e9dfc2;
+    --turquoise:#1c7c8c;
+    --turquoise-dark:#125a66;
+    --gold:#c9973e;
+    --terracotta:#a6502e;
+    --violet:#6d5a9e;
+    --ink:#241c14;
+    --ink-soft:#5a4f3e;
+    --ink-light:#f1ecdd;
+    --ink-light-soft:#bcd3d6;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg-deep);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Amiri',serif;
+    margin:0;
+    font-weight:700;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:60px 24px 84px;
+    overflow:hidden;
+    background:linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-deep-2) 100%);
+    text-align:center;
+  }
+  .hero-pattern{
+    position:absolute;
+    inset:0;
+    opacity:0.5;
+    pointer-events:none;
+  }
+  .hero-inner{ position:relative; max-width:720px; margin:0 auto; }
+  .hero-eyebrow{
+    font-size:14px;
+    color:var(--gold);
+    letter-spacing:0.02em;
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:clamp(40px,7vw,64px);
+    color:var(--ink-light);
+    line-height:1.05;
+  }
+  .hero p{
+    color:var(--ink-light-soft);
+    font-size:17px;
+    line-height:1.6;
+    max-width:540px;
+    margin:20px auto 0;
+  }
+  .hero-band{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    height:14px;
+    background: repeating-linear-gradient(45deg, var(--gold) 0 10px, var(--terracotta) 10px 20px);
+    opacity:0.85;
+  }
+
+  /* ---------- TYPES SECTION ---------- */
+  .types-section{
+    max-width:1120px;
+    margin:0 auto;
+    padding:44px 24px 12px;
+  }
+  .section-heading{
+    color:var(--ink-light);
+    text-align:center;
+    max-width:640px;
+    margin:0 auto 30px;
+  }
+  .section-heading .eyebrow{
+    font-size:13px;
+    color:var(--gold);
+    margin-bottom:8px;
+  }
+  .section-heading h2{
+    font-size:clamp(26px,4vw,34px);
+    color:var(--ink-light);
+  }
+  .section-heading p{
+    color:var(--ink-light-soft);
+    font-size:15px;
+    line-height:1.6;
+    margin-top:10px;
+  }
+  .types-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:20px;
+  }
+  .type-card{
+    background:var(--surface);
+    border-radius:14px;
+    overflow:hidden;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    transition:transform 0.18s ease, box-shadow 0.18s ease;
+    border-bottom:5px solid transparent;
+  }
+  .type-card:hover{ transform:translateY(-3px); box-shadow:0 16px 32px -14px rgba(0,0,0,0.5); }
+  .type-thumb{ height:140px; }
+  .type-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .type-body{ padding:16px 18px 20px; }
+  .type-body h3{ font-size:20px; color:var(--ink); margin-bottom:6px; }
+  .type-tagline{ font-size:13px; color:var(--ink-soft); line-height:1.5; margin-bottom:10px; }
+  .type-link{ font-size:13px; font-weight:600; color:var(--turquoise-dark); }
+
+  .section-divider{
+    max-width:1120px;
+    margin:44px auto 0;
+    padding:0 24px;
+  }
+  .section-divider hr{
+    border:none;
+    height:1px;
+    background:rgba(241,236,221,0.15);
+  }
+  .subsection-label{
+    color:var(--ink-light-soft);
+    text-align:center;
+    font-size:13px;
+    margin:26px 0 6px;
+  }
+  .subsection-label strong{ color:var(--ink-light); font-family:'Amiri',serif; font-size:22px; display:block; margin-bottom:6px; font-weight:700; }
+
+  /* ---------- CONTROLS ---------- */
+  .controls{
+    max-width:1120px;
+    margin:-36px auto 0;
+    padding:0 24px;
+    position:relative;
+    z-index:2;
+  }
+  .controls-card{
+    background:var(--surface);
+    border-radius:14px;
+    padding:18px 20px;
+    box-shadow:0 18px 40px -18px rgba(0,0,0,0.5);
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    align-items:center;
+  }
+  .search-box{
+    flex:1 1 220px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--surface-2);
+    border-radius:8px;
+    padding:9px 12px;
+  }
+  .search-box input{
+    border:none;
+    background:none;
+    outline:none;
+    font-family:'Inter',sans-serif;
+    font-size:14.5px;
+    color:var(--ink);
+    width:100%;
+  }
+  .search-box input::placeholder{ color:var(--ink-soft); }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{
+    border:1px solid rgba(36,28,20,0.18);
+    background:transparent;
+    color:var(--ink);
+    padding:8px 14px;
+    border-radius:999px;
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    font-weight:500;
+    cursor:pointer;
+    transition:background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    white-space:nowrap;
+    display:flex; align-items:center; gap:6px;
+  }
+  .chip:hover{ border-color:var(--turquoise); }
+  .chip.active{
+    background:var(--turquoise-dark);
+    border-color:var(--turquoise-dark);
+    color:var(--ink-light);
+  }
+  .chip-dot{ width:8px; height:8px; border-radius:50%; display:inline-block; }
+
+  /* ---------- GRID ---------- */
+  .grid-wrap{ max-width:1120px; margin:0 auto; padding:36px 24px 20px; }
+  .result-count{
+    color:var(--ink-light-soft);
+    font-size:14px;
+    margin-bottom:16px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:22px;
+  }
+  .card{
+    background:var(--surface);
+    border-radius:12px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform 0.18s ease, box-shadow 0.18s ease;
+    display:flex;
+    flex-direction:column;
+    border-top:4px solid transparent;
+  }
+  .card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 16px 32px -14px rgba(0,0,0,0.5);
+  }
+  .card-thumb{
+    height:150px;
+    position:relative;
+    background-size:cover;
+    background-position:center;
+    background-color:var(--surface-2);
+  }
+  .card-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .card-body{ padding:16px 18px 18px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .card-badge{
+    align-self:flex-start;
+    font-size:11.5px;
+    font-weight:600;
+    padding:3px 10px;
+    border-radius:999px;
+    color:var(--ink-light);
+  }
+  .card h3{ font-size:19px; color:var(--ink); line-height:1.25; }
+  .card-loc{
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+  .card-teaser{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    line-height:1.5;
+    flex:1;
+  }
+  .card-link{
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--turquoise-dark);
+    margin-top:4px;
+  }
+
+  .empty-state{
+    color:var(--ink-light-soft);
+    text-align:center;
+    padding:60px 20px;
+    font-size:15px;
+  }
+
+  footer{
+    text-align:center;
+    color:var(--ink-light-soft);
+    font-size:12px;
+    padding:40px 24px 48px;
+    opacity:0.75;
+    max-width:640px;
+    margin:0 auto;
+    line-height:1.6;
+  }
+
+  /* ---------- MODAL ---------- */
+  .modal-overlay{
+    position:fixed; inset:0;
+    background:rgba(10,31,41,0.75);
+    display:none;
+    align-items:flex-start;
+    justify-content:center;
+    padding:5vh 20px;
+    z-index:50;
+    overflow-y:auto;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal{
+    background:var(--surface);
+    max-width:600px;
+    width:100%;
+    border-radius:16px;
+    overflow:hidden;
+    position:relative;
+  }
+  .modal-thumb{ height:220px; position:relative; background-size:cover; background-position:center; background-color:var(--surface-2); }
+  .modal-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .modal-close{
+    position:absolute; top:14px; right:14px;
+    width:32px; height:32px; border-radius:50%;
+    background:rgba(15,43,56,0.6);
+    border:none;
+    color:#fff;
+    font-size:18px;
+    line-height:1;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .modal-body{ padding:26px 28px 30px; }
+  .modal-badge{
+    display:inline-block;
+    font-size:12px;
+    font-weight:600;
+    padding:4px 11px;
+    border-radius:999px;
+    color:var(--ink-light);
+    margin-bottom:12px;
+  }
+  .modal h2{ font-size:26px; color:var(--ink); margin-bottom:6px; }
+  .modal-meta{ font-size:13.5px; color:var(--ink-soft); margin-bottom:8px; }
+  .modal-facts{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-bottom:16px;
+  }
+  .fact-pill{
+    font-size:12px;
+    background:var(--surface-2);
+    color:var(--ink-soft);
+    padding:4px 10px;
+    border-radius:6px;
+  }
+  .modal-desc{ font-size:14.5px; line-height:1.72; color:var(--ink); }
+  .modal-desc p + p{ margin-top:12px; }
+  .modal-credit{
+    margin-top:18px;
+    padding-top:14px;
+    border-top:1px solid rgba(36,28,20,0.12);
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+  .modal-credit a{ color:var(--turquoise-dark); }
+
+  @media (max-width:520px){
+    .hero{ padding:48px 18px 70px; }
+    .controls-card{ padding:14px; }
+    .modal-thumb{ height:160px; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <svg class="hero-pattern" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <pattern id="heroGirih" width="46" height="46" patternUnits="userSpaceOnUse" patternTransform="scale(1)">
+        <path d="M23 2 L38 12 L38 34 L23 44 L8 34 L8 12 Z" fill="none" stroke="#c9973e" stroke-width="0.9" opacity="0.7"/>
+        <path d="M23 2 L23 44 M8 12 L38 34 M38 12 L8 34" stroke="#c9973e" stroke-width="0.6" opacity="0.4"/>
+        <circle cx="23" cy="23" r="5" fill="none" stroke="#1c7c8c" stroke-width="0.9" opacity="0.6"/>
+      </pattern>
+    </defs>
+    <rect width="400" height="200" fill="url(#heroGirih)"/>
+  </svg>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Milliy naqqoshlik san'ati — raqamli katalog loyihasi</div>
+    <h1>Naqqoshlik</h1>
+    <p>O'zbek naqqoshlik an'analarining tanlangan namunalari — me'moriy peshtoqlardan kulolchilik va kashtachilikkacha. Turi bo'yicha filtrlang yoki nom/joy bo'yicha qidiring, har bir namunani bosib to'liq tarixiy-texnik tavsifni o'qing.</p>
+    <p style="margin-top:18px;font-size:14px;color:var(--gold);">Ismoilova Mashhura Nodirjon qizi &middot; Magistratura dissertatsiyasi: "Naqqoshlik san'atida milliy naqshlarning raqamli arxivi va interaktiv katalogini yaratish"</p>
+  </div>
+  <div class="hero-band"></div>
+</section>
+
+<section class="types-section">
+  <div class="section-heading">
+    <div class="eyebrow">1-qism</div>
+    <h2>Naqsh turlari</h2>
+    <p>Naqqoshlikning to'rtta asosiy "tili" — har birining o'z kelib chiqishi, tuzilish qonuniyati va qo'llanilish doirasi bor. Kartochkani bosib, har bir turning tarixi va texnikasi bilan tanishing.</p>
+  </div>
+  <div class="types-grid" id="typesGrid"></div>
+</section>
+
+<div class="section-divider"><hr></div>
+<div class="subsection-label"><strong>2-qism</strong>Namunalar katalogi — bu naqshlar qaysi binolarda uchraydi</div>
+
+<div class="controls">
+  <div class="controls-card">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a4f3e" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="text" placeholder="Nom yoki joy bo'yicha qidirish...">
+    </div>
+    <div class="chips" id="chipRow"></div>
+  </div>
+</div>
+
+<div class="grid-wrap">
+  <div class="result-count" id="resultCount"></div>
+  <div class="grid" id="grid"></div>
+  <div class="empty-state" id="emptyState" style="display:none;">Hech narsa topilmadi. Boshqa kalit so'z yoki filtr bilan urinib ko'ring.</div>
+</div>
+
+<footer>
+  Magistratura dissertatsiyasi doirasidagi prototip &middot; III-bob: amaliy tajriba.<br>
+  Muallif: Ismoilova Mashhura Nodirjon qizi &middot; Mavzu: "Naqqoshlik san'atida milliy naqshlarning raqamli arxivi va interaktiv katalogini yaratish"<br>
+  Suratlar Wikimedia Commons ochiq litsenziyali (CC BY / CC BY-SA) arxividan olingan; har bir surat manbasi mos namunaning batafsil oynasida ko'rsatilgan.
+</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div class="modal-thumb" id="modalThumb"></div>
+    <div class="modal-body">
+      <span class="modal-badge" id="modalBadge"></span>
+      <h2 id="modalTitle"></h2>
+      <div class="modal-meta" id="modalMeta"></div>
+      <div class="modal-facts" id="modalFacts"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="modal-credit" id="modalCredit"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATEGORY_COLORS = {
+  "Girih": "#1c7c8c",
+  "Islimiy": "#c9973e",
+  "Epigrafik": "#6d5a9e",
+  "Amaliy san'at": "#a6502e"
+};
+
+function commonsImg(filename, width){
+  const withUnderscores = filename.replace(/ /g, '_');
+  const path = 'https://commons.wikimedia.org/wiki/Special:FilePath/' + encodeURIComponent(withUnderscores);
+  return width ? path + '?width=' + width : path;
+}
+
+const ITEMS = [
+  {
+    id:1,
+    name:"Sherdor madrasasi peshtoqi",
+    type:"Girih",
+    location:"Registon ansambli, Samarqand",
+    era:"1619–1636",
+    facts:["Buyurtmachi: Yalangtoʻsh Bahodir","Texnika: koshinkori mozaika","Holati: ЮНЕСКО jahon merosi"],
+    file:"Sher-Dor Madrasa 02.jpg",
+    credit:"Sher-Dor Madrasa 02.jpg, Wikimedia Commons",
+    teaser:"Islom me'morchiligida kamdan-kam uchraydigan tirik mavjudot tasviri — sher va quyosh — girih naqshlari bilan uyg'unlashgan peshtoq.",
+    desc:[
+      "Sherdor madrasasi Registon ansamblidagi uchinchi va oxirgi yirik bino bo'lib, Samarqand hokimi Yalangtoʻsh Bahodir buyrug'i bilan 1619–1636-yillarda, Ulug'bek madrasasiga qarama-qarshi tomonda, avvalgi Ulug'bek xonaqohi o'rnida qurilgan. Uning peshtoq bezagi naqqoshlik tarixida alohida o'rin tutadi.",
+      "An'anaviy girih (geometrik yulduzsimon) naqshlar fonida yo'lbarsga o'xshash sher va uning ustida inson yuzli quyosh, sher esa oq kiyikni ta'qib qilayotgan holatda tasvirlangan. Bu — diniy me'morchilikda odatda cheklangan jonli mavjudot tasvirining nodir namunasi bo'lib, tadqiqotchilar bu tanlovni davr hukmdorining shaxsiy irodasi va mahalliy majoziy an'analar bilan bog'laydi.",
+      "Naqsh kompozitsiyasi rangli koshinkori (sirlangan g'isht) texnikasida bajarilgan; fon to'liq girih tarmog'i va o'simliksimon (islimiy) elementlar bilan to'ldirilgan. Bino 20-asr va 21-asr boshlarida bir necha bosqichda restavratsiya qilingan va 2001-yildan buyon \"Samarqand — madaniyatlar chorrahasi\" nomi ostida ЮНЕСКО jahon merosi ro'yxatida turadi."
+    ]
+  },
+  {
+    id:2,
+    name:"Ulug'bek madrasasi portali",
+    type:"Girih",
+    location:"Registon ansambli, Samarqand",
+    era:"1417–1420",
+    facts:["Buyurtmachi: Mirzo Ulug'bek","Texnika: koshin + o'yma terrakota","Registondagi eng qadimgi bino"],
+    file:"Ulugbek Madrasa 2007.jpg",
+    credit:"Ulugbek Madrasa 2007.jpg, Wikimedia Commons",
+    teaser:"Yulduzsimon ko'p burchakli geometrik naqshlar asosida qurilgan klassik girih kompozitsiyasi.",
+    desc:[
+      "Ulug'bek madrasasi Registon ansamblidagi eng qadimgi bino bo'lib, Temuriy hukmdor, matematik va astronom Mirzo Ulug'bek buyrug'i bilan 1417–1420-yillarda qurilgan. Portali murakkab matematik hisob-kitoblarga asoslangan girih naqshlarining eng yorqin namunalaridan biri hisoblanadi.",
+      "Naqsh asosini sakkiz qirrali yulduzlar va ular orasidagi ko'p qirrali shakllarning uzluksiz tessellyatsiyasi (bo'shliqsiz takrorlanishi) tashkil etadi. Bu geometrik tizim muntazam ko'pburchaklar va oltin nisbat kabi proportsiyalarga asoslanadi — shu sababli ko'plab tadqiqotchilar buni Ulug'bekning aniq fanlarga bo'lgan qiziqishi bilan bog'lashadi.",
+      "Naqsh sirlangan koshin va o'yma terrakota (g'isht o'ymakorligi) uyg'unligida ishlangan. Madrasa ichki hovlisidagi hujralar eshiklari ustida ham nafis xattotlik namunalari saqlanib qolgan — bu esa girih naqshlarining epigrafik unsurlar bilan uyg'unlashuvining yaqqol namunasidir."
+    ]
+  },
+  {
+    id:3,
+    name:"Tillakori masjid-madrasasi ichki bezagi",
+    type:"Islimiy",
+    location:"Registon ansambli, Samarqand",
+    era:"1647–1660",
+    facts:["Texnika: kundal (oltin suvi)","Registondagi yagona masjid-madrasa","So'nggi qurilgan bino"],
+    file:"Tilla-Kori Madrasah.jpg",
+    credit:"Tilla-Kori Madrasah.jpg, Wikimedia Commons",
+    teaser:"Oltin suvi bilan qoplangan, o'simliksimon islimiy naqshlar bilan bezatilgan ichki interyer.",
+    desc:[
+      "Tillakori (\"oltin bilan qoplangan\") Registon ansamblidagi so'nggi va eng yirik bino bo'lib, 1647–1660-yillarda qurilgan. U bir vaqtning o'zida ham masjid, ham madrasa vazifasini bajargan — bu Registon uchun noyob holat.",
+      "Binoning nomini o'z ichki bezagidagi oltin suvi yugurtilgan naqshlaridan olgan. Gumbaz va devorlarni qoplagan islimiy naqshlar chirmoviqsimon barg va gul motivlaridan iborat bo'lib, ayniqsa markaziy mehrob atrofida naqsh zichligi yuqori.",
+      "Bezak \"kundal\" texnikasida bajarilgan: relyefli ganch yoki qog'ozli asos ustiga avval bo'rtma naqsh yaratiladi, so'ng unga oltin va kumush suvi hamda rangli bo'yoqlar surtiladi. Bu texnika Registon ansamblidagi naqqoshlikning eng yuqori nuqtasi sifatida baholanadi."
+    ]
+  },
+  {
+    id:4,
+    name:"Shohizinda majmuasi koshinlari",
+    type:"Girih",
+    location:"Shohizinda, Samarqand",
+    era:"XI, asosan XIV–XV asrlar",
+    facts:["20 dan ortiq maqbara","Texnika: majolika + banno'i","Qusam ibn Abbos maqbarasi bilan bog'liq"],
+    file:"Samarkand Shah-i Zinda general view.JPG",
+    credit:"Samarkand Shah-i Zinda general view.JPG, Wikimedia Commons",
+    teaser:"Ko'k va firuza rangli sirlangan koshinlar bilan qoplangan maqbaralar ko'chasi.",
+    desc:[
+      "Shohizinda — \"ko'cha\" shaklida joylashgan, yigirmadan ortiq maqbara va masjiddan iborat nekropol majmuasi. Majmua nomi bu yerga dafn etilgan, rivoyatga ko'ra hamon \"tirik\" deb hisoblangan Qusam ibn Abbos bilan bog'liq.",
+      "Har bir maqbara alohida naqsh dasturiga ega bo'lib, asosan ko'k, firuza, oq, ba'zan sariq va yashil ranglar uyg'unligida ishlangan — bu rang palitrasi \"Samarqand koshinkorligi\" deb ataladi. Naqshlar girih va o'simliksimon (islimiy) unsurlarning uyg'un birikuvidan iborat.",
+      "Ayrim maqbaralarda \"banno'i\" texnikasi ham qo'llanilgan — bunda oddiy va sirlangan g'ishtlar birgalikda naqsh hosil qiladigan tarzda terilgan. Majmua turli davrlarda (XI asrdan XIX asrgacha, asosiy qismi esa XIV–XV asrlarda) qurilgani sababli naqqoshlik uslublarining tarixiy evolyutsiyasini bir joyda kuzatish imkonini beruvchi noyob \"ochiq muzey\" hisoblanadi."
+    ]
+  },
+  {
+    id:5,
+    name:"Bibixonim masjidi peshtoqi",
+    type:"Epigrafik",
+    location:"Bibixonim masjidi, Samarqand",
+    era:"1399–1404",
+    facts:["Buyurtmachi: Amir Temur","Peshtoq balandligi ~35 m","Qurilgan davrda mintaqadagi eng yirik masjid"],
+    file:"Bibi-Khanym Mosque.jpg",
+    credit:"Bibi-Khanym Mosque.jpg, Wikimedia Commons",
+    teaser:"Ulkan peshtoqni bezagan arab yozuvidagi kufiy va suls uslubidagi epigrafik naqshlar.",
+    desc:[
+      "Bibixonim masjidi Amir Temur tomonidan Hindiston yurishidan qaytgach, 1399–1404-yillarda qurdirilgan bo'lib, o'z davrida Movarounnahrdagi eng yirik masjidlardan biri hisoblangan — bosh peshtoqning balandligi taxminan 35 metrga yetgan.",
+      "Peshtoqlarda Qur'on oyatlari va bezakli yozuvlar suls va kufiy xat uslublarida naqqoshlik texnikasi bilan ifodalangan. Yozuv naqshlari geometrik girih ramkalar bilan birga qo'llanilib, matn ham diniy mazmun, ham bezak vazifasini bir vaqtda bajaradi.",
+      "Masjid qurilishidan ko'p o'tmay zilzilalar va vaqt ta'sirida jiddiy shikastlangan. 20-asr oxiri — 21-asr boshida keng ko'lamli restavratsiya o'tkazilgan, bu esa ilmiy adabiyotda \"asl va tiklangan naqsh\" nisbati mavzusidagi muhokamalarni keltirib chiqargan — sizning tadqiqotingiz uchun ham qiziqarli metodologik masala."
+    ]
+  },
+  {
+    id:6,
+    name:"Pahlavon Mahmud maqbarasi gumbazi",
+    type:"Islimiy",
+    location:"Ichan-Qal'a, Xiva",
+    era:"XIV asr (hozirgi ko'rinishi 1810–1825)",
+    facts:["Qo'ng'irot xonlari dafn etilgan","Eshiklar mis va fil suyagi bilan bezatilgan","Xivaning homiy avliyosi"],
+    file:"Pakhlavan Mahmoud Mausoleum main room detail 1.JPG",
+    credit:"Pakhlavan Mahmoud Mausoleum main room detail 1.JPG, Wikimedia Commons",
+    teaser:"Gumbaz osti bag'allarida (\"bag'al\" — burchak elementlari) ishlangan nozik islimiy naqshlar.",
+    desc:[
+      "Pahlavon Mahmud — shoir, mashhur pahlavon (kurashchi), teri ustasi va tabib bo'lgan, hozirda Xivaning homiy avliyosi sifatida e'zozlanadi. Uning qabri ustidagi dastlabki maqbara XIV asrga oid, ammo hozirgi hashamatli ko'rinishi 1810–1825-yillarda Qo'ng'irot xonlari davrida shakllangan — shu davrdan boshlab bu yerga xonlar sulolasi a'zolari ham dafn etila boshlangan.",
+      "Xiva naqqoshlik maktabining o'ziga xos xususiyati — gumbaz ostidagi burchak qismlarni (\"bag'allarni\") nozik islimiy naqsh bilan to'ldirish. Gumbazning tashqi yuzasi ko'k sirlangan koshin va oltin suvli tepalik bilan bezatilgan.",
+      "Maqbara majmuasida naqqoshlikning bir necha turi birlashgan: devorlarda majolika, eshiklarda mis va fil suyagi bilan ziynatlangan yog'och o'ymakorligi, muhim qabrlar oldida esa mushabak metall panjaralar. Bu — Xorazm naqqoshlik maktabining eng yetuk va ko'p qirrali namunalaridan biri hisoblanadi."
+    ]
+  },
+  {
+    id:7,
+    name:"Juma masjidi yog'och ustunlari",
+    type:"Amaliy san'at",
+    location:"Ichan-Qal'a, Xiva",
+    era:"X–XVI asrlar (ustunlar), bino 1788-yilda qayta qurilgan",
+    facts:["212 ta yog'och ustun","25 tasi X–XVI asrga oid","Gumbazsiz, tekis tomli noyob masjid"],
+    file:"O'yma Naqshinkor ustun.jpg",
+    credit:"O'yma Naqshinkor ustun.jpg, Wikimedia Commons",
+    teaser:"Yog'och o'ymakorligi uslubida ishlangan ustunlar — naqqoshlikning me'morchilikdagi tashuvchi elementlarga tatbiqi.",
+    desc:[
+      "Xivaning Juma masjidi Markaziy Osiyoda analogsiz me'moriy yechimga ega: gumbazlarsiz, tekis tomli, 55x46 metrlik ulkan zal 212 ta yog'och ustunga tayanadi. Bino birinchi marta X asrda qayd etilgan, hozirgi ko'rinishi esa 1778–1782-yillarda qayta qurilgan.",
+      "Ustunlarning 25 tasi ancha qadimiy (X–XVI asrlar) bo'lib, ular orasidagi to'rttasi X–XI asrga oid — ularda kufiy xatida bitiklar saqlanib qolgan, jumladan bir ustunda xayriya haqida ma'lumot beruvchi yozuv bor. Har bir davr ustuni o'ziga xos naqsh uslubida — ba'zilari geometrik (girih), ba'zilari Xivaga xos floral naqshlar bilan o'yilgan.",
+      "Bu namuna naqqoshlikning nafaqat tekis devor yoki gumbazlarda, balki hajmli, konstruktiv (tashuvchi) elementlarda ham qanday ishlatilishini ko'rsatadi — naqqoshlik shunchaki bezak emas, balki qurilish elementining ajralmas qismiga aylanishi mumkinligini isbotlaydi."
+    ]
+  },
+  {
+    id:8,
+    name:"Rishton kulolchiligi",
+    type:"Amaliy san'at",
+    location:"Rishton, Farg'ona vodiysi",
+    era:"Miloddan avvalgi II–I asrlardan davom etayotgan an'ana",
+    facts:["Xom ashyo: mahalliy qizil loy","Sir turi: ishqor (o'simlik kuli)","Har bir usta oilaviy uslubga ega"],
+    file:"Rishton Ceramics ac (1).jpg",
+    credit:"Rishton Ceramics ac (1).jpg, Wikimedia Commons",
+    teaser:"Mahalliy \"ishqor\" sirlari bilan pishirilgan, ko'k-siyoh va firuza naqshli sopol buyumlar.",
+    desc:[
+      "Rishton — Farg'ona vodiysidagi qadimiy kulolchilik markazi. Arxeologik qazishmalar hozirgi Rishton hududida miloddan avvalgi II–I asrlarga oid kulolchilik ustaxonalari va xumdonlar izlarini topgan, bu esa hunarmandchilikning uzluksiz an'anaviyligini tasdiqlaydi.",
+      "Buyumlar mahalliy qizil loydan yasaladi, sir sifatida esa \"ishqor\" — ma'lum o'simliklarni kuydirishdan olingan kul asosidagi mineral bo'yoq ishlatiladi. Rang gammasida ko'k, firuza va akvamarin ranglar ustunlik qiladi, bu Rishton kulolchiligini Xorazm, Samarqand va Gijduvon kabi boshqa markazlardan farqlaydi.",
+      "Naqsh motivlarida qadimiy ramziy elementlar bilan uyg'unlashgan o'simlik naqshlari ustunlik qiladi — bu \"islimiy\" uslubning amaliy san'atdagi ko'rinishi hisoblanadi. Har bir usta oilasi o'z naqsh uslubi va \"imzosini\" avloddan-avlodga o'tkazadi, shu sababli mutaxassislar buyumning qaysi ustaxonaga tegishli ekanini naqsh xususiyatlariga qarab aniqlay oladi."
+    ]
+  },
+  {
+    id:9,
+    name:"Suzana kashtachiligi",
+    type:"Amaliy san'at",
+    location:"Buxoro, Nurota, Toshkent va boshqa hududlar",
+    era:"XIX asr va undan keyin",
+    facts:["So'z ma'nosi: \"igna\" (fors.)","11 dan ortiq mintaqaviy maktab","Kelin-kuyov sepiga kiradi"],
+    file:"Uzbekistan embroidery.jpg",
+    credit:"Uzbekistan embroidery.jpg, Wikimedia Commons",
+    teaser:"Qo'lda tikilgan, katta gul, quyosh va yulduz motivli to'qima bezaklari.",
+    desc:[
+      "\"Suzana\" so'zi fors tilidagi \"suzan\" (igna) so'zidan kelib chiqqan. Bu — kelin-kuyov to'yiga tayyorlanadigan sep tarkibiga kiruvchi yirik hajmli devoriy kashta bo'lib, qizlar uni yoshligidan onasi va buvisidan o'rganib tikkan.",
+      "Kompozitsiyada quyosh va oy diskalari, gullar, uzum toklari, ba'zan meva (ayniqsa anor) va qushlar tasvirlanadi; rozetka ichidagi yulduzsimon shakllar (\"yulduz\") ayniqsa Toshkent uslubidagi suzanalarda keng tarqalgan. Qiziqarli an'anaga ko'ra, kompozitsiyaning bir qismi atayin tugallanmay qoldirilgan — buni kelinning o'zi to'y kunidan oldin yakunlashi kerak bo'lgan.",
+      "Tarixan O'zbekistonda Buxoro, Samarqand, Toshkent, Shahrisabz va boshqa hududlarda jami 11 dan ortiq kashtachilik maktabi mavjud bo'lgan, har biri o'ziga xos kompozitsiya, motiv tanlovi va rang palitrasi bilan ajralib turadi. Kashta kanop yoki ipak mato asosida, ipak yoki paxta ip bilan zanjir, atlas va boshqa tikuv turlarida bajariladi."
+    ]
+  },
+  {
+    id:10,
+    name:"Kalon minorasi",
+    type:"Epigrafik",
+    location:"Buxoro",
+    era:"1127",
+    facts:["Balandligi ~45–47 m","Me'mor: usto Bako","12 ta bezak kamari"],
+    file:"Kalon Minaret, Bukhara (4933987001).jpg",
+    credit:"Kalon Minaret, Bukhara (4933987001).jpg, Wikimedia Commons",
+    teaser:"Pishiq g'ishtlardan terilgan geometrik va yozma naqsh kamarlari.",
+    desc:[
+      "Kalon minorasi Qoraxoniylar sulolasi hukmdori Arslon-xon Muhammad ibn Sulaymon buyrug'i bilan 1127-yilda, usto Bako loyihasi asosida qurilgan. Balandligi taxminan 45–47 metr bo'lib, poydevordan tepaga tomon asta-sekin torayib boruvchi shaklga ega.",
+      "Minoraning tashqi yuzasi 12 ta gorizontal \"bezak kamari\"ga bo'lingan, ularning har biri turlicha \"banno'i\" (naqshli g'isht terish) uslubida ishlangan — ayrimlari to'g'ri, ayrimlari diagonal chessboard tartibida terilgan. Bir kamarda qurilish sanasi, me'mor va homiy nomini ko'rsatuvchi kufiy yozuv saqlangan.",
+      "Minora tepasida 16 ravoqli fonar (yorug'lik xonasi) joylashgan bo'lib, u yerdan azon aytilgan hamda qamal paytida kuzatuv minorasi sifatida foydalanilgan. Rivoyatlarga ko'ra, Chingizxon istilosi paytida vayron qilinmagan yagona yirik bino sifatida tilga olinadi. Bu namuna naqqoshlikning faqat sirlangan koshin emas, balki oddiy pishiq g'ishtni geometrik tarzda terish orqali ham yaratilishini ko'rsatadi — bezak bevosita qurilish texnologiyasi bilan uyg'unlashgan."
+    ]
+  },
+  {
+    id:11,
+    name:"Gur-Amir maqbarasi gumbazi",
+    type:"Islimiy",
+    location:"Samarqand",
+    era:"1403–1404",
+    facts:["64 ta \"qovurg'a\"li gumbaz","Amir Temur va avlodlari dafn etilgan","Boburiylar me'morchiligiga ta'sir ko'rsatgan"],
+    file:"Guri Amir (Samarkand)-06 Visitors inside.jpg",
+    credit:"Guri Amir (Samarkand)-06 Visitors inside.jpg, Wikimedia Commons",
+    teaser:"Ko'k-oq naqshli, 64 qovurg'ali gumbaz va ichkaridagi muqarnas shift bezagi.",
+    desc:[
+      "Gur-Amir dastlab Amir Temur nabirasi Muhammad Sultonga bag'ishlab 1403–1404-yillarda qurdirilgan, keyinchalik esa Amir Temur va uning avlodlari — jumladan Ulug'bek — dafn etilgan sulolaviy maqbaraga aylangan.",
+      "Tashqi gumbaz to'q ko'k va oq naqshli sirlangan koshin bilan qoplangan bo'lib, 64 ta \"qovurg'a\" (rebro) shaklida ishlangan — bu Movarounnahr me'morchiligida nodir konstruktiv-badiiy yechim hisoblanadi. Gumbaz ostidagi muqarnas (stalaktitsimon) shift esa islimiy naqsh va oltin suvi bilan boyitilgan.",
+      "Asosiy dafn xonasida Amir Temur nomi bitilgan yashil nefrit (qoraqosh) tosh saqlanadi. Gur-Amirning kompozitsion yechimlari keyinchalik Hindistondagi Boburiylar me'morchiligiga, jumladan Toj-Mahal gumbaziga, bevosita ta'sir ko'rsatgan deb hisoblanadi — bu uni jahon me'morchiligi tarixida alohida o'ringa qo'yadi."
+    ]
+  },
+  {
+    id:12,
+    name:"Islom-Xo'ja minorasi",
+    type:"Girih",
+    location:"Ichan-Qal'a, Xiva",
+    era:"1908–1910",
+    facts:["Xivaning eng baland minorasi","Buyurtmachi: bosh vazir Islom-Xo'ja","Majmuaning so'nggi yirik yodgorligi"],
+    file:"Islam Khodja Minaret 01.jpg",
+    credit:"Islam Khodja Minaret 01.jpg, Wikimedia Commons",
+    teaser:"Yuqoriga tomon torayuvchi rangli koshin kamarlari — Xiva naqqoshlik maktabining 20-asr boshidagi so'nggi yirik namunasi.",
+    desc:[
+      "Islom-Xo'ja minorasi Xiva xonligi bosh vaziri Islom-Xo'ja buyrug'i bilan 1908–1910-yillarda qurilgan bo'lib, Ichan-Qal'a majmuasidagi eng so'nggi yirik yodgorliklardan biridir. U bugungi kunda Xivaning eng baland minorasi hisoblanadi (turli manbalarda 45–56,6 metr oralig'ida ko'rsatiladi).",
+      "Minora tanasi bir necha gorizontal kamarga bo'lingan, har bir kamar turli rang va o'lchamdagi sirlangan g'ishtlar bilan bezatilgan. Kamarlar yuqoriga tomon torayib boradi — bu esa minorani haqiqiy balandligidan ham baland ko'rsatadigan optik effekt yaratadi (me'morlar tomonidan ataylab qo'llanilgan usul).",
+      "Islom-Xo'ja minorasi Xiva naqqoshlik maktabining 20-asr boshidagi so'nggi yirik namunasi bo'lib, an'anaviy uslubning o'sha davrgacha qanday davom etganini ko'rsatadi — bu esa naqqoshlikning tarixiy uzluksizligi mavzusida qimmatli dalil beradi."
+    ]
+  },
+  {
+    id:13,
+    name:"Chor-Minor",
+    type:"Girih",
+    location:"Buxoro",
+    era:"1807",
+    facts:["Nomi: \"to'rt minora\" (fors.)","Buyurtmachi: Xalifa Niyozqul","Har bir minoracha o'ziga xos naqshli"],
+    file:"Chor minor madrasah.jpg",
+    credit:"Chor minor madrasah.jpg, Wikimedia Commons",
+    teaser:"To'rtta bir-biriga o'xshamas naqshli gumbazcha — simmetriya va individuallik muvozanatining noyob namunasi.",
+    desc:[
+      "Chor-Minor fors tilida \"to'rt minora\" degan ma'noni anglatadi. Uni 1807-yilda turkman kelib chiqishli badavlat buxorolik Xalifa Niyozqul endi mavjud bo'lmagan madrasaning darvozaxonasi sifatida qurdirgan.",
+      "Binoning to'rtta minorachasi bir-biridan farq qiluvchi gumbaz shakli va koshin naqshiga ega — bu O'rta Osiyo me'morchiligida analogsiz kompozitsion yechim hisoblanadi. Har bir minoracha alohida rang va naqsh dasturi bilan bezatilgan bo'lsada, umumiy kompozitsiya yaxlit va muvozanatli taassurot qoldiradi.",
+      "Chor-Minor naqqoshlikda simmetriya va individuallik o'rtasidagi muvozanatning noyob namunasi sifatida qaraladi: bir binoning to'rt qismi bir-biriga o'xshamaydi, lekin ular birgalikda uyg'un yaxlit obraz hosil qiladi — bu prinsip zamonaviy interaktiv katalog dizaynida ham (turli namunalarning yagona tizimga birlashishi) qiziqarli parallel sifatida ko'rilishi mumkin."
+    ]
+  }
+];
+
+const TYPES = [
+  {
+    key:"Girih",
+    name:"Girih",
+    tagline:"Geometrik yulduz va ko'pburchaklar tarmog'idan iborat tugunli naqsh tili.",
+    file:"Samarkand Shah-i Zinda Tuman Aqa complex.JPG",
+    credit:"Samarkand Shah-i Zinda Tuman Aqa complex.JPG, Wikimedia Commons",
+    facts:["Ma'nosi: \"tugun\", \"chigal chiziq\"","Asos: muntazam ko'pburchaklar tessellyatsiyasi","Markazlari: Samarqand, Buxoro, Xiva"],
+    desc:[
+      "\"Girih\" so'zi fors-turkiy tillarda \"tugun\" yoki \"chigal chiziq\" degan ma'noni bildiradi. Uning ildizlari Islomgacha bo'lgan geometrik bezak an'analariga (qadimgi Sug'diyona va Sosoniylar davri) borib taqaladi, ammo mustaqil va murakkab bezak tizimi sifatida IX–X asrlardan boshlab Islom me'morchiligida jadal rivojlangan.",
+      "Girih naqshlari muntazam va yarim-muntazam ko'pburchaklar (kvadrat, olti burchak, sakkiz qirrali yulduz, o'nikki qirrali shakllar) ning bo'shliqsiz takrorlanishi — tessellyatsiyasiga asoslanadi. Naqqosh-me'morlar bu murakkab tarmoqlarni loyihalashtirish uchun maxsus yordamchi panjara-chizmalardan (\"girih plitalari\") foydalangan; naqsh nazariy jihatdan chekkasiz, cheksiz davom etadigan tarzda qurilgan bo'ladi.",
+      "Girih koshinkori (sirlangan g'isht), ganchkori (o'ymakor gips), yog'och o'ymakorligi va hatto kitob muqovalari bezagida keng qo'llaniladi. O'zbekistonda uning eng yorqin namunalari Samarqanddagi Registon va Shohizinda majmualarida, Buxorodagi Kalon minorasi va Mir-Arab madrasasida, shuningdek Xiva me'morchiligida uchraydi."
+    ]
+  },
+  {
+    key:"Islimiy",
+    name:"Islimiy",
+    tagline:"Chirmoviqsimon barg, gul va butalardan tuzilgan o'simliksimon naqsh turi.",
+    file:"Flowerpots at the Persian Islamic Mosaic walls of the Gur-e-Amir Mausoleum in Samarkand.jpg",
+    credit:"Flowerpots at the Persian Islamic Mosaic walls of the Gur-e-Amir Mausoleum in Samarkand.jpg, Wikimedia Commons",
+    facts:["Asosi: tanob, band, barg, buta","Mahalliy xillari: Isfahoni, Arabi, Mashhadi","Amaliy san'atda keng qo'llaniladi"],
+    desc:[
+      "Islimiy — o'simliksimon shakldagi takrorlanuvchi taqsimotlardan tuzilgan asosiy naqsh turlaridan biri. Uning asosini tanob (bosh chiziq), band, barg va butalar tashkil etadi; naqsh bir-biriga uzluksiz ulanib, o'ralib ketuvchi chirmoviqsimon shaklda takrorlanadi — shu sababli ustalar uni ko'pincha \"o'rama\" yoki \"o'simliksimon naqsh\" deb ham atashgan.",
+      "Turli davrlarda yashagan xalq ustalari yangi-yangi islimiy xillarini yaratgan; naqsh turlari hunarmandchiligi rivojlangan shaharlar nomlari bilan ham atalgan — masalan, Isfahoni islimiy, Arabi islimiy, Mashhadi islimiy. Uni yanada jozibali qilish uchun ba'zan qimmatbaho toshlar va qahrabo kabi qo'shimcha materiallar ham qadalgan (zargarlik va kandakorlikda).",
+      "Islimiy ganchkorlik, naqqoshlik (devoriy rasm), yog'och o'ymakorligi, miskarlik, zardo'zlik, kulolchilik, gilamchilik va kashtado'zlikda keng qo'llaniladi hamda O'rta Osiyo, Yaqin Sharq, Hindiston, Eron, Turkiya va Afg'oniston ustalari tomonidan foydalanilgan. O'zbekistonda uning yetuk namunalari Xiva (Pahlavon Mahmud maqbarasi gumbaz osti bag'allari), Buxoro, Samarqand (Sherdor ravog'i va mehrobi), Toshkent, Qo'qon, Marg'ilon va Andijondagi yog'och o'ymakorligida uchraydi."
+    ]
+  },
+  {
+    key:"Epigrafik",
+    name:"Epigrafik",
+    tagline:"Kufiy va suls xatidagi yozuvlarni bezak elementiga aylantirish san'ati.",
+    file:"Kalyan minaret. Band 14 with dedicatory inscription in the name of Arslan Khan Muhammad ibn Sulayman.jpg",
+    credit:"Kalyan minaret. Band 14 with dedicatory inscription..., Wikimedia Commons",
+    facts:["Asosiy xatlar: kufiy va suls","Vazifasi: diniy matn + bezak","Ko'pincha girih ramka ichida"],
+    desc:[
+      "Epigrafik naqsh — diniy matn (asosan Qur'on oyatlari, hadislar) yoki bino haqidagi ma'lumotlarni (qurilish sanasi, homiy va me'mor nomi) bezak elementiga aylantirish san'ati. Bunda eng ko'p qo'llaniladigan xat uslublari burchakli va geometrik kufiy hamda egri, oqib boruvchi suls xatlaridir; ba'zan devoniy va nasta'liq uslublari ham uchraydi.",
+      "Texnik jihatdan yozuv naqqoshlikka ikki yo'l bilan ko'chiriladi: g'isht terish (\"banno'i\") orqali yoki sirlangan koshinda rang farqi bilan ajratib ifodalash orqali. Ko'pincha yozuv mustaqil holda emas, balki girih ramkalar yoki islimiy bezaklar ichiga uyg'unlashtirilgan holda joylashtiriladi.",
+      "Epigrafik naqsh bir vaqtning o'zida ham diniy-ma'rifiy, ham sof bezak vazifasini bajaradi — hatto tomoshabin matn mazmunini o'qiy olmasa ham, uning grafik ritmi va shakli estetik zavq beradi. O'zbekistonda bu naqsh turining eng mashhur namunalari Bibixonim masjidi peshtoqlarida, Kalon minorasi bezak kamarlarida va Ulug'bek madrasasi hujralaridagi yozuvlarda uchraydi."
+    ]
+  },
+  {
+    key:"Amaliy san'at",
+    name:"Amaliy san'at",
+    tagline:"Girih, islimiy va epigrafik tillarning kundalik buyumlarga ko'chirilishi.",
+    file:"Uzbek-suzani-motives-1120286.jpg",
+    credit:"Uzbek-suzani-motives-1120286.jpg, Wikimedia Commons",
+    facts:["Kulolchilik, kashtachilik, metall/yog'och ustaligi","Texnikalar: kandakori, chizma, shabaka","Xalq turmush tarzi bilan bog'liq"],
+    desc:[
+      "Yuqoridagi uch naqsh tili — girih, islimiy va epigrafik — me'morchilikdan tashqari amaliy buyumlarga, ya'ni kulolchilik, kashtachilik, yog'och va metall ustaligiga ham keng ko'chirilgan. Bu qatlam naqqoshlik tilining xalq kundalik turmushiga qanchalik chuqur singib ketganini ko'rsatadi.",
+      "Kulolchilikda har bir mintaqa (Rishton, Xorazm, Samarqand, Gijduvon) o'ziga xos sir texnologiyasi va rang palitrasiga ega bo'lib, naqsh odatda islimiy uslubda ishlanadi. Kashtachilikda (suzana) esa floral va astral (yulduz, quyosh) motivlar mintaqaviy maktablar bo'yicha farqlanadi.",
+      "Yog'och va metall ustaligida girih va islimiy naqshlar hajmli buyumlarga (eshik, ustun, idish) tatbiq etiladi; bunda kandakori (chuqur o'yma), chizma (yengil chizilgan naqsh) va shabaka (teshib o'yish) kabi maxsus texnikalar qo'llaniladi. Amaliy san'at namunalari me'morchilikdagi \"yuqori san'at\"dan farqli ravishda naqqoshlikning \"xalq san'ati\" qatlamini ifodalaydi."
+    ]
+  }
+];
+
+function renderTypes(){
+  const grid = document.getElementById('typesGrid');
+  grid.innerHTML = '';
+  TYPES.forEach(t=>{
+    const card = document.createElement('div');
+    card.className = 'type-card';
+    card.style.borderBottomColor = CATEGORY_COLORS[t.key];
+    card.innerHTML = `
+      <div class="type-thumb"><img src="${commonsImg(t.file, 500)}" alt="${t.name}" loading="lazy"></div>
+      <div class="type-body">
+        <h3>${t.name}</h3>
+        <div class="type-tagline">${t.tagline}</div>
+        <div class="type-link">Batafsil &rarr;</div>
+      </div>
+    `;
+    card.addEventListener('click', ()=>openTypeModal(t));
+    grid.appendChild(card);
+  });
+}
+
+function openTypeModal(t){
+  document.getElementById('modalThumb').innerHTML = `<img src="${commonsImg(t.file, 900)}" alt="${t.name}">`;
+  document.getElementById('modalBadge').textContent = "Naqsh turi";
+  document.getElementById('modalBadge').style.background = CATEGORY_COLORS[t.key];
+  document.getElementById('modalTitle').textContent = t.name;
+  document.getElementById('modalMeta').textContent = "Naqsh tili";
+  document.getElementById('modalFacts').innerHTML = t.facts.map(f=>`<span class="fact-pill">${f}</span>`).join('');
+  document.getElementById('modalDesc').innerHTML = t.desc.map(p=>`<p>${p}</p>`).join('');
+  document.getElementById('modalCredit').innerHTML = `Surat manbasi: <a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(t.file.replace(/ /g,'_'))}" target="_blank" rel="noopener">${t.credit}</a>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+renderTypes();
+
+const CATEGORIES = ["Barchasi","Girih","Islimiy","Epigrafik","Amaliy san'at"];
+let activeCategory = "Barchasi";
+let searchTerm = "";
+
+const chipRow = document.getElementById('chipRow');
+CATEGORIES.forEach(cat=>{
+  const btn = document.createElement('button');
+  btn.className = 'chip' + (cat===activeCategory ? ' active':'');
+  const dot = cat === "Barchasi" ? '' : `<span class="chip-dot" style="background:${CATEGORY_COLORS[cat]}"></span>`;
+  btn.innerHTML = dot + cat;
+  btn.addEventListener('click', ()=>{
+    activeCategory = cat;
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  });
+  chipRow.appendChild(btn);
+});
+
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  searchTerm = e.target.value.trim().toLowerCase();
+  render();
+});
+
+function render(){
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('emptyState');
+  const countEl = document.getElementById('resultCount');
+  grid.innerHTML = '';
+
+  const filtered = ITEMS.filter(item=>{
+    const matchesCat = activeCategory === "Barchasi" || item.type === activeCategory;
+    const haystack = (item.name + ' ' + item.location).toLowerCase();
+    const matchesSearch = searchTerm === '' || haystack.includes(searchTerm);
+    return matchesCat && matchesSearch;
+  });
+
+  countEl.textContent = filtered.length + ' ta namuna topildi';
+
+  if(filtered.length === 0){
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    filtered.forEach(item=>{
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.borderTopColor = CATEGORY_COLORS[item.type];
+      card.innerHTML = `
+        <div class="card-thumb"><img src="${commonsImg(item.file, 500)}" alt="${item.name}" loading="lazy"></div>
+        <div class="card-body">
+          <span class="card-badge" style="background:${CATEGORY_COLORS[item.type]}">${item.type}</span>
+          <h3>${item.name}</h3>
+          <div class="card-loc">${item.location} &middot; ${item.era}</div>
+          <div class="card-teaser">${item.teaser}</div>
+          <div class="card-link">Batafsil &rarr;</div>
+        </div>
+      `;
+      card.addEventListener('click', ()=>openModal(item));
+      grid.appendChild(card);
+    });
+  }
+}
+
+function openModal(item){
+  document.getElementById('modalThumb').innerHTML = `<img src="${commonsImg(item.file, 900)}" alt="${item.name}">`;
+  document.getElementById('modalBadge').textContent = item.type;
+  document.getElementById('modalBadge').style.background = CATEGORY_COLORS[item.type];
+  document.getElementById('modalTitle').textContent = item.name;
+  document.getElementById('modalMeta').textContent = item.location + ' · ' + item.era;
+  document.getElementById('modalFacts').innerHTML = item.facts.map(f=>`<span class="fact-pill">${f}</span>`).join('');
+  document.getElementById('modalDesc').innerHTML = item.desc.map(p=>`<p>${p}</p>`).join('');
+  document.getElementById('modalCredit').innerHTML = `Surat manbasi: <a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(item.file.replace(/ /g,'_'))}" target="_blank" rel="noopener">${item.credit}</a>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+document.getElementById('modalClose').addEventListener('click', ()=>{
+  document.getElementById('modalOverlay').classList.remove('open');
+});
+document.getElementById('modalOverlay').addEventListener('click', (e)=>{
+  if(e.target.id === 'modalOverlay'){
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+});
+
+render();
+</script>
+</body>
+</html>
